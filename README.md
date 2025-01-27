@@ -2,13 +2,6 @@
 
 This repository contains my implementation of the **Data Engineering Zoomcamp** project. It includes exercises and projects related to **Docker**, **Postgres**, and **Terraform**, leveraging modern data engineering tools and cloud technologies.  
 
-## Table of Contents  
-- [Introduction](#introduction)  
-- [Technologies](#technologies)  
-- [Features](#features)  
-- [Project Structure](#project-structure)  
-- [How to Run Locally](#how-to-run-locally)  
-- [References](#references)  
 
 ---
 
@@ -39,56 +32,15 @@ The following technologies are used in this project:
 
 ---
 
+## References  
+1. Data Engineering Zoomcamp Official GitHub.  
+2. YouTube Video Playlist.  
+ 
+---
 
 
-## Project Structure  
 
-  ``` plaintext  
-📦 data-engineering-zoomcamp-project  
-├── 📂 1_terraform_gcp         # Terraform setup for GCP  
-├── 📂 2_docker_sql            # Docker and Postgres setup  
-├── 📂 data                    # Sample data files  
-├── 📜 docker-compose.yml      # Docker Compose configuration  
-├── 📜 ingestion_script.py     # Python script for data ingestion  
-├── 📜 main.tf                 # Terraform main file  
-├── 📜 variables.tf            # Terraform variables  
-├── 📜 README.md               # Project documentation (this file)
-
-```
-
-## How to Run Locally  
-To run this project on your machine:
-
-## Prerequisites
-1. Install Docker and Docker Compose.
-2. Install Terraform.
-3. Have a valid Google Cloud Platform (GCP) account.
-
-Steps
-Clone this repository:
-```bash
-git clone https://github.com/<your-username>/data-engineering-zoomcamp.git  
-cd data-engineering-zoomcamp  
-
-```
-2.Build and run Docker containers:
-```bash
-docker-compose up   
-```
-
-3.Deploy GCP infrastructure using Terraform:
-```bash
-terraform init  
-terraform apply
-```
-4.Run the data ingestion script:
-```bash
-docker-compose up
-python ingestion_script.py  
-```
-## References
-1.Data Engineering Zoomcamp - Official GitHub
-2.Course Introduction Slides
-3.YouTube Video Playlist
+## Acknowledgments
+Special thanks to the DataTalksClub team for creating this incredible learning experience!
 
 
