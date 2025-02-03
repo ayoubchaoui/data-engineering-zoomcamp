@@ -167,24 +167,6 @@ If you encounter issues:
 2. If port `8080` is occupied, adjust the Kestra Docker Compose file to use a different port.
 3. For Linux users, if you encounter `Connection Refused` errors, modify the Docker Compose file to use `postgres_zoomcamp` instead of `host.docker.internal`.
 
----
-
-## Homework
-
-Refer to the **2025 cohort folder** for homework tasks and additional resources.
-
----
-
-## Community Notes
-
-Feel free to contribute your notes by creating a PR to this file!
-
-- Notes from Manuel Guerra
-- Notes from Horeb Seidou
-- Notes from Livia
-- 2025 Gitbook Notes from Tinker0425
-
-
 
 ---
 
