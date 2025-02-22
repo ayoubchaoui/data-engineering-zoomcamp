@@ -22,17 +22,12 @@ select
     -- timestamps
     cast(lpep_pickup_datetime as timestamp) as pickup_datetime,
     cast(lpep_dropoff_datetime as timestamp) as dropoff_datetime,
-   
+    
     -- trip info
-   
+    store_and_fwd_flag,
     {{ dbt.safe_cast("passenger_count", api.Column.translate_type("integer")) }} as passenger_count,
     cast(trip_distance as numeric) as trip_distance,
     {{ dbt.safe_cast("trip_type", api.Column.translate_type("integer")) }} as trip_type,
-    --- store_and_fwd_flag  covert to booleen
-    case
-        when store_and_fwd_flag = 'N' then false
-        else true
-    end as store_and_fwd_flag,
 
     -- payment info
     cast(fare_amount as numeric) as fare_amount,
@@ -50,8 +45,8 @@ where rn = 1
 
 
 -- dbt build --select <model_name> --vars '{'is_test_run': 'false'}'
- {% if var('is_test_run', default=true) %}
+{% if var('is_test_run', default=true) %}
 
- limit 100
+  limit 100
 
 {% endif %}
