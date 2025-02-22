@@ -24,7 +24,7 @@ select
     cast(lpep_dropoff_datetime as timestamp) as dropoff_datetime,
    
     -- trip info
-    store_and_fwd_flag,
+   
     {{ dbt.safe_cast("passenger_count", api.Column.translate_type("integer")) }} as passenger_count,
     cast(trip_distance as numeric) as trip_distance,
     {{ dbt.safe_cast("trip_type", api.Column.translate_type("integer")) }} as trip_type,
