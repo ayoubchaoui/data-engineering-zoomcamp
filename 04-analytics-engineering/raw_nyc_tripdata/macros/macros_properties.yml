@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: 2
 
 macros:
@@ -10,17 +9,4 @@ macros:
         type: int
         description: > 
           payment_type value.
-=======
-version: 2
-
-macros:
-  - name: get_payment_type_description
-    description: >
-      This macro receives a payment_type and returns the corresponding description.
-    arguments:
-      - name: payment_type
-        type: int
-        description: > 
-          payment_type value.
->>>>>>> 0171c95c0693d50ba5a9b59b5ccc489f09f26eb9
           Must be one of the accepted values, otherwise the macro will return null
