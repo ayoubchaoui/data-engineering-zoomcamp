@@ -36,7 +36,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  taxi_rides_ny:
+  raw_nyc_tripdata:
       # Applies to all files under models/.../
       staging:
           materialized: view
@@ -46,7 +46,7 @@ vars:
   payment_type_values: [1, 2, 3, 4, 5, 6]
 
 seeds: 
-    taxi_rides_ny:
+    raw_nyc_tripdata:
         taxi_zone_lookup:
             +column_types:
                 locationid: numeric
