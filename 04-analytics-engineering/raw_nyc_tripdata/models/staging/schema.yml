@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: staging
     database: kestra-449718 
-    schema: kestra-449718 
+    schema: Zoomcamp 
       # loaded_at_field: record_loaded_at
     tables:
       - name: green_tripdata
