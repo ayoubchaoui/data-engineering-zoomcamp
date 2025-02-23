@@ -8,6 +8,7 @@ sources:
       - name: green_tripdata
       - name: yellow_tripdata
       - name: fhv_tripdata  # Added FHV trip data as a source table
+      - name: fhvhv_tripdata  # Added FHVHV trip data as a source table
 
 models:
   - name: stg_green_tripdata
@@ -122,3 +123,26 @@ models:
       - name: dropoff_locationid
         description: The location ID where the passenger was dropped off.
 
+  - name: stg_fhvhv_tripdata
+    description: >
+      Trips made by High-Volume For-Hire Vehicles (FHVHV), which include app-based ride-hailing services.
+    columns:
+      - name: tripid
+        description: Primary key for this table, generated with a concatenation of dispatching_base_num + pickup_datetime.
+        tests:
+          - unique
+          - not_null
+      - name: dispatching_base_num
+        description: The base number assigned to the FHVHV service provider.
+      - name: pickup_datetime
+        description: The date and time when the trip started.
+      - name: dropoff_datetime
+        description: The date and time when the trip ended.
+      - name: pickup_locationid
+        description: The location ID where the passenger was picked up.
+      - name: dropoff_locationid
+        description: The location ID where the passenger was dropped off.
+      - name: sr_flag
+        description: A flag indicating whether the ride was shared.
+      - name: affiliated_base_number
+        description: The base number assigned to the affiliated service provider.
