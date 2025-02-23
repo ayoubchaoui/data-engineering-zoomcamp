@@ -2,7 +2,11 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
+<<<<<<< HEAD
 name: 'my_new_project'
+=======
+name: 'raw_nyc_tripdata'
+>>>>>>> 0171c95c0693d50ba5a9b59b5ccc489f09f26eb9
 version: '1.0.0'
 config-version: 2
 
@@ -36,7 +40,24 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
+<<<<<<< HEAD
   my_new_project:
     # Applies to all files under models/example/
     example:
       +materialized: table
+=======
+  raw_nyc_tripdata:
+      # Applies to all files under models/.../
+      staging:
+          materialized: view
+      core:
+          materialized: table
+vars:
+  payment_type_values: [1, 2, 3, 4, 5, 6]
+
+seeds: 
+    raw_nyc_tripdata:
+        taxi_zone_lookup:
+            +column_types:
+                locationid: numeric
+>>>>>>> 0171c95c0693d50ba5a9b59b5ccc489f09f26eb9
