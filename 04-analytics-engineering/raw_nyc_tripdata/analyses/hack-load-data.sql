@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- Creating green_tripdata table
 CREATE TABLE `kestra-zoomcamp-bucket-01.zoomcamp.green_tripdata` AS 
 SELECT * FROM `bigquery-public-data.new_york_taxi_trips.tlc_green_trips_2019`; 
