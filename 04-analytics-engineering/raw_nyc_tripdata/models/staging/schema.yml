@@ -1,0 +1,148 @@
+version: 2
+
+sources:
+  - name: staging
+    database: kestra-449718
+    schema: zoomcamp
+    tables:
+      - name: green_tripdata
+      - name: yellow_tripdata
+      - name: fhv_tripdata  # Added FHV trip data as a source table
+      - name: fhvhv_tripdata  # Added FHVHV trip data as a source table
+
+models:
+  - name: stg_green_tripdata
+    description: >
+      Trips made by green taxis, also known as boro taxis and street-hail liveries.
+      Green taxis may respond to street hails but only in designated areas of NYC.
+    columns:
+      - name: tripid
+        description: Primary key for this table, generated with a concatenation of vendorid + pickup_datetime.
+        tests:
+          - unique
+          - not_null
+      - name: vendorid
+        description: A code indicating the TPEP provider that provided the record.
+      - name: pickup_datetime
+        description: The date and time when the meter was engaged.
+      - name: dropoff_datetime
+        description: The date and time when the meter was disengaged.
+      - name: pickup_locationid
+        description: Location ID where the meter was engaged.
+        tests:
+          - relationships:
+              to: ref('taxi_zone_lookup')
+              field: locationid
+      - name: dropoff_locationid
+        description: Location ID where the meter was disengaged.
+        tests:
+          - relationships:
+              to: ref('taxi_zone_lookup')
+              field: locationid
+      - name: passenger_count
+        description: The number of passengers in the vehicle. This is a driver-entered value.
+      - name: trip_distance
+        description: The elapsed trip distance in miles reported by the taximeter.
+      - name: payment_type
+        description: A numeric code signifying how the passenger paid for the trip.
+        tests:
+          - accepted_values:
+              values: "{{ var('payment_type_values') }}"
+              severity: warn
+              quote: false
+      - name: fare_amount
+        description: The time-and-distance fare calculated by the meter.
+      - name: tip_amount
+        description: Tip amount. This field is automatically populated for credit card tips.
+      - name: total_amount
+        description: The total amount charged to passengers.
+
+  - name: stg_yellow_tripdata
+    description: >
+      Trips made by New York City's iconic yellow taxis. Yellow taxis are the only vehicles permitted
+      to respond to a street hail from a passenger in all five boroughs.
+    columns:
+      - name: tripid
+        description: Primary key for this table, generated with a concatenation of vendorid + pickup_datetime.
+        tests:
+          - unique
+          - not_null
+      - name: vendorid
+        description: A code indicating the TPEP provider that provided the record.
+      - name: pickup_datetime
+        description: The date and time when the meter was engaged.
+      - name: dropoff_datetime
+        description: The date and time when the meter was disengaged.
+      - name: pickup_locationid
+        description: Location ID where the meter was engaged.
+        tests:
+          - relationships:
+              to: ref('taxi_zone_lookup')
+              field: locationid
+      - name: dropoff_locationid
+        description: Location ID where the meter was disengaged.
+        tests:
+          - relationships:
+              to: ref('taxi_zone_lookup')
+              field: locationid
+      - name: passenger_count
+        description: The number of passengers in the vehicle. This is a driver-entered value.
+      - name: trip_distance
+        description: The elapsed trip distance in miles reported by the taximeter.
+      - name: payment_type
+        description: A numeric code signifying how the passenger paid for the trip.
+        tests:
+          - accepted_values:
+              values: "{{ var('payment_type_values') }}"
+              severity: warn
+              quote: false
+      - name: fare_amount
+        description: The time-and-distance fare calculated by the meter.
+      - name: tip_amount
+        description: Tip amount. This field is automatically populated for credit card tips.
+      - name: total_amount
+        description: The total amount charged to passengers.
+
+  - name: stg_fhv_tripdata
+    description: >
+      Trips made by For-Hire Vehicles (FHV), which include black cars, limousines, and other private transportation services.
+    columns:
+      - name: tripid
+        description: Primary key for this table, generated with a concatenation of dispatching_base_num + pickup_datetime.
+        tests:
+          - unique
+          - not_null
+      - name: dispatching_base_num
+        description: The base number assigned to the FHV service provider.
+      - name: pickup_datetime
+        description: The date and time when the trip started.
+      - name: dropoff_datetime
+        description: The date and time when the trip ended.
+      - name: pickup_locationid
+        description: The location ID where the passenger was picked up.
+      - name: dropoff_locationid
+        description: The location ID where the passenger was dropped off.
+
+  - name: stg_fhvhv_tripdata
+    description: >
+      Trips made by High-Volume For-Hire Vehicles (FHVHV), which include app-based ride-hailing services.
+    columns:
+      - name: tripid
+        description: Primary key for this table, generated with a concatenation of dispatching_base_num + pickup_datetime.
+        tests:
+          - unique
+          - not_null
+      - name: dispatching_base_num
+        description: The base number assigned to the FHVHV service provider.
+      - name: pickup_datetime
+        description: The date and time when the trip started.
+      - name: dropoff_datetime
+        description: The date and time when the trip ended.
+      - name: pickup_locationid
+        description: The location ID where the passenger was picked up.
+      - name: dropoff_locationid
+        description: The location ID where the passenger was dropped off.
+      - name: sr_flag
+        description: A flag indicating whether the ride was shared.
+      - name: affiliated_base_number
+        description: The base number assigned to the affiliated service provider.
