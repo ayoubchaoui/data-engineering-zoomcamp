@@ -1,0 +1,178 @@
+version: 2
+
+models:
+  - name: hote_crime
+    description: "This table contains data about crimes, including auto theft, with various attributes such as location, offense type, and bias information."
+    columns:
+      - name: _id
+        description: "Unique identifier for the crime record."
+        tests:
+          - unique
+          - not_null
+      - name: EVENT_UNIQUE_ID
+        description: "Unique identifier for the event (offense number)."
+        tests:
+          - unique
+          - not_null
+      - name: OCCURRENCE_YEAR
+        description: "The year the crime occurred."
+        tests:
+          - not_null
+      - name: OCCURRENCE_DATE
+        description: "The exact date the crime occurred."
+        tests:
+          - not_null
+      - name: OCCURRENCE_TIME
+        description: "The time the crime occurred in minutes since midnight."
+        tests:
+          - not_null
+      - name: REPORTED_YEAR
+        description: "The year the crime was reported."
+        tests:
+          - not_null
+      - name: REPORTED_DATE
+        description: "The exact date the crime was reported."
+        tests:
+          - not_null
+      - name: REPORTED_TIME
+        description: "The time the crime was reported in minutes since midnight."
+        tests:
+          - not_null
+      - name: DIVISION
+        description: "Division where the crime occurred (e.g., district or precinct)."
+        tests:
+          - not_null
+      - name: LOCATION_TYPE
+        description: "Type of location where the crime occurred (e.g., street, parking lot)."
+        tests:
+          - not_null
+      - name: AGE_BIAS
+        description: "Age-related bias involved in the crime (if applicable)."
+      - name: MENTAL_OR_PHYSICAL_DISABILITY
+        description: "Bias related to mental or physical disability, if any."
+      - name: RACE_BIAS
+        description: "Bias related to race, if any."
+      - name: ETHNICITY_BIAS
+        description: "Bias related to ethnicity, if any."
+      - name: LANGUAGE_BIAS
+        description: "Bias related to language, if any."
+      - name: RELIGION_BIAS
+        description: "Bias related to religion, if any."
+      - name: SEXUAL_ORIENTATION_BIAS
+        description: "Bias related to sexual orientation, if any."
+      - name: GENDER_BIAS
+        description: "Bias related to gender, if any."
+      - name: MULTIPLE_BIAS
+        description: "Indicates if there were multiple biases involved in the crime."
+      - name: PRIMARY_OFFENCE
+        description: "The primary offense committed."
+        tests:
+          - not_null
+      - name: HOOD_158
+        description: "The neighborhood code for the location of the crime."
+      - name: NEIGHBOURHOOD_158
+        description: "The name of the neighborhood where the crime occurred."
+        tests:
+          - not_null
+      - name: HOOD_140
+        description: "The secondary neighborhood code for the crime location."
+      - name: NEIGHBOURHOOD_140
+        description: "The name of the secondary neighborhood for the crime location."
+      - name: ARREST_MADE
+        description: "Indicates whether an arrest was made related to the crime (Yes/No)."
+        tests:
+          - not_null
+
+  - name: major_crime
+    description: "This table contains data about major crimes, including offenses, location, and time of occurrence and reporting."
+    columns:
+      - name: _id
+        description: "Unique identifier for the major crime record."
+        tests:
+          - unique
+          - not_null
+      - name: EVENT_UNIQUE_ID
+        description: "Unique identifier for the event (offense number)."
+        tests:
+          - unique
+          - not_null
+      - name: REPORT_DATE
+        description: "The date the major crime was reported."
+        tests:
+          - not_null
+      - name: OCC_DATE
+        description: "The exact date the crime occurred."
+        tests:
+          - not_null
+      - name: REPORT_YEAR
+        description: "The year the crime was reported."
+        tests:
+          - not_null
+      - name: REPORT_MONTH
+        description: "The month the crime was reported."
+      - name: REPORT_DAY
+        description: "The day of the month the crime was reported."
+        tests:
+          - not_null
+      - name: REPORT_DOY
+        description: "The day of the year when the crime was reported."
+        tests:
+          - not_null
+      - name: REPORT_DOW
+        description: "The day of the week when the crime was reported."
+      - name: REPORT_HOUR
+        description: "The hour the crime was reported."
+        tests:
+          - not_null
+      - name: OCC_YEAR
+        description: "The year the crime occurred."
+        tests:
+          - not_null
+      - name: OCC_MONTH
+        description: "The month the crime occurred."
+      - name: OCC_DAY
+        description: "The day of the month the crime occurred."
+      - name: OCC_DOY
+        description: "The day of the year when the crime occurred."
+      - name: OCC_DOW
+        description: "The day of the week when the crime occurred."
+      - name: OCC_HOUR
+        description: "The hour the crime occurred."
+        tests:
+          - not_null
+      - name: DIVISION
+        description: "Division where the crime occurred (e.g., district or precinct)."
+        tests:
+          - not_null
+      - name: LOCATION_TYPE
+        description: "Type of location where the crime occurred (e.g., street, parking lot)."
+        tests:
+          - not_null
+      - name: PREMISES_TYPE
+        description: "The type of premises where the crime occurred."
+      - name: UCR_CODE
+        description: "The Uniform Crime Reporting code for the offense."
+        tests:
+          - not_null
+      - name: UCR_EXT
+        description: "The extended Uniform Crime Reporting code for the offense."
+      - name: OFFENCE
+        description: "The type of crime committed."
+        tests:
+          - not_null
+      - name: MCI_CATEGORY
+        description: "The category of the offense (e.g., major crime category)."
+      - name: HOOD_158
+        description: "The neighborhood code for the location of the crime."
+      - name: NEIGHBOURHOOD_158
+        description: "The name of the neighborhood where the crime occurred."
+        tests:
+          - not_null
+      - name: HOOD_140
+        description: "The secondary neighborhood code for the crime location."
+      - name: NEIGHBOURHOOD_140
+        description: "The name of the secondary neighborhood for the crime location."
+      - name: LONG_WGS84
+        description: "Longitude of the crime location in WGS84 format."
+      - name: LAT_WGS84
+        description: "Latitude of the crime location in WGS84 format."
