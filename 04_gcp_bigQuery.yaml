@@ -1,0 +1,91 @@
+id: 04_gcp_bigQuery
+namespace: zoomcamp
+description: |
+  The CSV Data used in the course: https://github.com/DataTalksClub/nyc-tlc-data/releases
+ 
+variables:
+  file: "Crimes.csv"
+  gcs_file: "gs://zoomcamp/Crimes.csv"
+  table: "{{kv('GCP_DATASET')}}.Crimes"
+
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file)}}"
+      
+
+  - id: bq_airbnb_table_ext
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          CREATE OR REPLACE EXTERNAL TABLE `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table)}}_ext`
+          (
+              _id INT64 OPTIONS (description = 'The ID of the crime record.'),
+              event_unique_id STRING OPTIONS (description = 'Unique event identifier for the crime.'),
+              occurrence_year INT64 OPTIONS (description = 'The year of the occurrence.'),
+              occurrence_date STRING OPTIONS (description = 'The date when the crime occurred.'),
+              occurrence_time INT64 OPTIONS (description = 'Time of the occurrence.'),
+              reported_year INT64 OPTIONS (description = 'The year when the crime was reported.'),
+              reported_date STRING OPTIONS (description = 'The date when the crime was reported.'),
+              reported_time INT64 OPTIONS (description = 'Time of the report.'),
+              division STRING OPTIONS (description = 'Division of the crime record.'),
+              location_type STRING OPTIONS (description = 'Type of the location where the crime happened.'),
+              age_bias STRING OPTIONS (description = 'Bias based on the age of the person involved.'),
+              mental_or_physical_disability STRING OPTIONS (description = 'Bias based on mental or physical disability.'),
+              race_bias STRING OPTIONS (description = 'Bias based on race.'),
+              ethnicity_bias STRING OPTIONS (description = 'Bias based on ethnicity.'),
+              language_bias STRING OPTIONS (description = 'Bias based on language.'),
+              religion_bias STRING OPTIONS (description = 'Bias based on religion.'),
+              sexual_orientation_bias STRING OPTIONS (description = 'Bias based on sexual orientation.'),
+              gender_bias STRING OPTIONS (description = 'Bias based on gender.'),
+              multiple_bias STRING OPTIONS (description = 'Multiple biases identified.'),
+              primary_offence STRING OPTIONS (description = 'Primary offence committed.'),
+              hood_158 STRING OPTIONS (description = 'Neighborhood code 158.'),
+              neighbourhood_158 STRING OPTIONS (description = 'Name of the neighborhood code 158.'),
+              hood_140 STRING OPTIONS (description = 'Neighborhood code 140.'),
+              neighbourhood_140 STRING OPTIONS (description = 'Name of the neighborhood code 140.'),
+              arrest_made STRING OPTIONS (description = 'Indicates if an arrest was made.')
+          )
+          OPTIONS (
+              format = 'CSV',
+              uris = ['gs://zoomcamp/Crimes.csv'],
+              skip_leading_rows = 1,
+              ignore_unknown_values = TRUE
+              
+          );
+
+  - id: bq_airbnb_table_tmp
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          CREATE OR REPLACE TABLE `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table)}}`
+          AS
+          SELECT
+            MD5(CONCAT(
+              COALESCE(CAST(_id AS STRING), ""),
+              COALESCE(CAST(event_unique_id  AS STRING), "")
+            )) AS unique_row_id,
+            
+            *
+          FROM `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table)}}_ext`;
+
+  - id: bq_airbnb_merge
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          MERGE INTO `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.Crimes` T
+          USING `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table)}}` S
+          ON T.unique_row_id = S.unique_row_id
+          WHEN NOT MATCHED THEN
+            INSERT (unique_row_id, _id, event_unique_id, occurrence_year, occurrence_date, occurrence_time, reported_year, reported_date, reported_time, division, location_type, age_bias, mental_or_physical_disability, race_bias, ethnicity_bias, language_bias, religion_bias, sexual_orientation_bias, gender_bias, multiple_bias, primary_offence, hood_158, neighbourhood_158, hood_140, neighbourhood_140, arrest_made)
+            VALUES (S.unique_row_id, S._id, S.event_unique_id, S.occurrence_year, S.occurrence_date, S.occurrence_time, S.reported_year, S.reported_date, S.reported_time, S.division, S.location_type, S.age_bias, S.mental_or_physical_disability, S.race_bias, S.ethnicity_bias, S.language_bias, S.religion_bias, S.sexual_orientation_bias, S.gender_bias, S.multiple_bias, S.primary_offence, S.hood_158, S.neighbourhood_158, S.hood_140, S.neighbourhood_140, S.arrest_made);
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+      serviceAccount: "{{kv('GCP_CREDS')}}"
