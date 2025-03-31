@@ -86,7 +86,10 @@ After executing the main Terraform script, the following tasks are executed to s
    - The dashboard will include visualizations that answer questions like:
      - What day, month, and year have the highest crime rates?
      - Which crime types are increasing the most?
-
+![Alt text](1.PNG)
+![Alt text](2.PNG)
+![Alt text](3.PNG)
+![Alt text](4.PNG)
 ## How Does It Work?
 
 1. **Data Ingestion**:
