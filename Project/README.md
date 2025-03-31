@@ -48,9 +48,8 @@ The data is available at: [Toronto Open Data Portal](https://open.toronto.ca/)
 ## Data Pipeline Overview
 This project uses a **batch processing pipeline** to process crime data and store it in a data warehouse (BigQuery), where it is then transformed and analyzed.
 
-### Stream vs. Batch
-- **Stream**: Real-time data ingestion (not implemented here).
-- **Batch**: Periodic execution of data processing tasks (daily, hourly).
+### image
+
 
 ## Technologies Used
 - **Cloud**: Google Cloud Platform (GCP)
