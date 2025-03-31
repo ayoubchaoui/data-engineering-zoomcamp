@@ -1,5 +1,5 @@
 WITH raw_staging AS (
-    SELECT * FROM   {{ source('src','hot_crime')}}
+    SELECT * FROM   {{ source('staging','hot_crime')}}
 )
 SELECT
         _id  as Id,
