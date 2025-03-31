@@ -1,6 +1,4 @@
-Sure! Here's an updated version of your README that includes the Terraform script execution steps and the additional tasks (lance) for deploying Docker Compose with Kestra:
 
----
 
 # Project: End-to-End Data Pipeline for Crime Data Analysis
 
@@ -155,6 +153,4 @@ To run this project, you'll need the following tools and services:
 ## Conclusion
 This project demonstrates how to create a scalable cloud-based data pipeline to process and analyze crime-related data. By building a pipeline using Terraform, Kestra, DBT, and BigQuery, we gain valuable insights into the patterns and causes of crime, contributing to better decision-making and understanding of crime trends in Toronto.
 
----
 
-This update includes detailed steps for executing Terraform, deploying Docker Compose with Kestra, and running the lance tasks to set up the necessary GCP infrastructure. Let me know if you'd like any further adjustments!
