@@ -1,0 +1,62 @@
+id: 03_gcp_bucket_finale
+namespace: zoomcamp
+description: |
+  The CSV Data used in the course: Inside Airbnb dataset processing.
+
+variables:
+  file01: "Hate_Crimes.csv"
+  gcs_file01: "gs://{{ kv('GCP_BUCKET_NAME') }}/{{ vars.file }}"
+  fileO2: "Major_Crime.csv"
+  gcs_file02: "gs://{{ kv('GCP_BUCKET_NAME') }}/{{ vars.file }}"
+
+tasks:
+  - id: Hate_Crimes
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{ render(vars.file01) }}"
+      
+
+  - id: extract_Hate
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "{{ vars.file01 }}" 
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -qO- https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/hate-crimes-open-data/resource/5e89f848-1573-4306-b011-de35e18b50d8/download/Hate%20Crimes%20Open%20Data.csv > {{ render(vars.file01) }}
+
+  - id: upload_to_gcs_Hate
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.extract.outputFiles[vars.file01] }}"
+    to: "{{ render(vars.gcs_file01) }}"
+    timeout: PT5M  # ✅ Maximum time for upload is 3 minutes
+
+  - id: Major_Crime
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{ render(vars.file02) }}"
+      
+
+  - id: extract_Major
+    type: io.kestra.plugin.scripts.shell.Commands
+    outputFiles:
+      - "{{ vars.file02 }}" 
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - wget -qO- https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/major-crime-indicators/resource/863bbdfb-a932-48b7-8a59-bf6585ef0563/download/major-crime-indicators.csv > {{ render(vars.file02) }}
+
+  - id: upload_to_gcs_Major
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.extract.outputFiles[vars.file02] }}"
+    to: "{{ render(vars.gcs_file02) }}"
+    timeout: PT5M  # ✅ Maximum time for upload is 3 minutes
+
+   
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"

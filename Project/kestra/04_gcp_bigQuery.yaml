@@ -1,0 +1,98 @@
+id: 04_gcp_bigQuery
+namespace: zoomcamp
+description: |
+  The CSV Data used in the course: https://github.com/DataTalksClub/nyc-tlc-data/releases
+
+variables:
+  file01: "Hate_Crimes.csv"
+  gcs_file01: "gs://{{ kv('GCP_BUCKET_NAME') }}/{{ vars.file01 }}"
+  table01: "{{kv('GCP_DATASET')}}.Hate_Crimes"
+  file02: "Major_Crime.csv"
+  gcs_file02: "gs://{{ kv('GCP_BUCKET_NAME') }}/{{ vars.file02 }}"
+  table02: "{{kv('GCP_DATASET')}}.Major_Crime"
+
+tasks:
+  - id: set_label
+    type: io.kestra.plugin.core.execution.Labels
+    labels:
+      file: "{{render(vars.file02)}}"
+
+  # Create external table for Major Crime data
+  - id: bq_major_crime_table_ext
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          CREATE OR REPLACE EXTERNAL TABLE `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table02)}}_ext`
+          (
+              _id INT64 OPTIONS (description = 'The ID of the crime record.'),
+              event_unique_id STRING OPTIONS (description = 'Unique event identifier for the crime.'),
+              report_date STRING OPTIONS (description = 'The date the crime was reported.'),
+              occ_date STRING OPTIONS (description = 'The occurrence date of the crime.'),
+              report_year INT64 OPTIONS (description = 'The year the crime was reported.'),
+              report_month STRING OPTIONS (description = 'The month the crime was reported.'),
+              report_day INT64 OPTIONS (description = 'The day of the month the crime was reported.'),
+              report_doy INT64 OPTIONS (description = 'The day of the year the crime was reported.'),
+              report_dow STRING OPTIONS (description = 'The day of the week the crime was reported.'),
+              report_hour INT64 OPTIONS (description = 'The hour of the day the crime was reported.'),
+              occ_year FLOAT64 OPTIONS (description = 'The year the crime occurred.'),
+              occ_month STRING OPTIONS (description = 'The month the crime occurred.'),
+              occ_day FLOAT64 OPTIONS (description = 'The day of the month the crime occurred.'),
+              occ_doy FLOAT64 OPTIONS (description = 'The day of the year the crime occurred.'),
+              occ_dow STRING OPTIONS (description = 'The day of the week the crime occurred.'),
+              occ_hour INT64 OPTIONS (description = 'The hour of the day the crime occurred.'),
+              division STRING OPTIONS (description = 'The division of the crime report.'),
+              location_type STRING OPTIONS (description = 'The type of location where the crime occurred.'),
+              premises_type STRING OPTIONS (description = 'The type of premises where the crime occurred.'),
+              ucr_code INT64 OPTIONS (description = 'The UCR code for the crime.'),
+              ucr_ext INT64 OPTIONS (description = 'The extended UCR code for the crime.'),
+              offence STRING OPTIONS (description = 'The type of offence committed.'),
+              mci_category STRING OPTIONS (description = 'The MCI category of the crime.'),
+              hood_158 STRING OPTIONS (description = 'Neighborhood code 158.'),
+              neighbourhood_158 STRING OPTIONS (description = 'Name of the neighborhood code 158.'),
+              hood_140 STRING OPTIONS (description = 'Neighborhood code 140.'),
+              neighbourhood_140 STRING OPTIONS (description = 'Name of the neighborhood code 140.'),
+              long_wgs84 FLOAT64 OPTIONS (description = 'Longitude in WGS84 coordinates.'),
+              lat_wgs84 FLOAT64 OPTIONS (description = 'Latitude in WGS84 coordinates.')
+          )
+          OPTIONS (
+              format = 'CSV',
+              uris = ['gs://{{ kv('GCP_BUCKET_NAME') }}/{{ vars.file02 }}'],
+              skip_leading_rows = 1,
+              ignore_unknown_values = TRUE
+          );
+
+  # Create the Major Crime table in BigQuery
+  - id: bq_major_crime_table_tmp
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          CREATE OR REPLACE TABLE `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table02)}}`
+          AS
+          SELECT
+            MD5(CONCAT(
+              COALESCE(CAST(_id AS STRING), ""),
+              COALESCE(CAST(event_unique_id AS STRING), "")
+            )) AS unique_row_id,
+            *
+          FROM `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table02)}}_ext`;
+
+  # Merge new data into the main Major Crime table
+  - id: bq_major_crime_merge
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+          MERGE INTO `{{kv('GCP_PROJECT_ID')}}.{{kv('GCP_DATASET')}}.Major_Crime` T
+          USING `{{kv('GCP_PROJECT_ID')}}.{{render(vars.table02)}}` S
+          ON T.unique_row_id = S.unique_row_id
+          WHEN NOT MATCHED THEN
+            INSERT (unique_row_id, _id, event_unique_id, report_date, occ_date, report_year, report_month, report_day, report_doy, report_dow, report_hour, occ_year, occ_month, occ_day, occ_doy, occ_dow, occ_hour, division, location_type, premises_type, ucr_code, ucr_ext, offence, mci_category, hood_158, neighbourhood_158, hood_140, neighbourhood_140, long_wgs84, lat_wgs84)
+            VALUES (S.unique_row_id, S._id, S.event_unique_id, S.report_date, S.occ_date, S.report_year, S.report_month, S.report_day, S.report_doy, S.report_dow, S.report_hour, S.occ_year, S.occ_month, S.occ_day, S.occ_doy, S.occ_dow, S.occ_hour, S.division, S.location_type, S.premises_type, S.ucr_code, S.ucr_ext, S.offence, S.mci_category, S.hood_158, S.neighbourhood_158, S.hood_140, S.neighbourhood_140, S.long_wgs84, S.lat_wgs84);
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+      serviceAccount: "{{kv('GCP_CREDS')}}"
