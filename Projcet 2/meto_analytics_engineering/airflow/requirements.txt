@@ -1,0 +1,12 @@
+pandas
+pyarrow
+pandas-gbq
+numpy
+pyodbc
+sqlalchemy
+google-cloud-bigquery
+google-cloud-storage
+google-auth
+dbt-core
+dbt-bigquery
+airflow-dbt
