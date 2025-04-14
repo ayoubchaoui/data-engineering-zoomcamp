@@ -1,0 +1,11 @@
+
+version: 2
+
+models:
+  - name: data_day
+    description: >
+      This table contains information for each day, including the ID, year, month, day, hour, temperature, rain, and wind speed.
+
+  - name: data_night
+    description: >
+      This table contains information for each night, including the ID, year, month, day, hour, temperature, rain, and wind speed.
