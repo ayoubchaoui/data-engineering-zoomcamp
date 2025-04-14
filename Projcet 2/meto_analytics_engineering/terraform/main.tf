@@ -41,7 +41,7 @@ resource "google_compute_instance" "vm_instance" {
       private_key = file(var.ssh_priv_key_file)
     }
     inline = [
-      "git clone https://github.com/ayoub/meto_analytics_engineering.git  ",
+      "git clone https://github.com/ayoubchaoui/data-engineering-zoomcamp.git ",
       "sudo apt-get install wget",
       "wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh",
       "bash Anaconda3-2022.10-Linux-x86_64.sh -b -p /home/ayoub/anaconda3",
