@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+    - name: staging
+      database: meto-analytics-2404  # GCP project id
+      schema: stg_meto_dataset        # BigQuery dataset name
+      
+      tables:
+        - name: meto_data_raw         # BigQuery table name
+         # freshness:
+           # warn_after: {count: 6, period: hour}
+           # error_after: {count: 12, period: hour}
+
+models:
+    - name: stg_meto_data
+      description: >
+        Real-time and historical data for various cryptocurrencies, including information such as current price, market cap, 
+        trading volume, percentage change, and other relevant metrics. 
+      columns:
+      - name: id
+        description: "Unique identifier for each record"
+        data_type: integer
+      - name: Year
+        description: "Year of the weather data"
+        data_type: integer
+      - name: Month
+        description: "Month of the weather data"
+        data_type: integer
+      - name: Day
+        description: "Day of the month of the weather data"
+        data_type: integer
+      - name: Hour
+        description: "Hour of the weather data (24-hour format)"
+        data_type: integer
+      - name: temperature
+        description: "Temperature at 2 meters above the ground (in Celsius)"
+        data_type: FLOAT(24)
+      - name: rain
+        description: "Rainfall amount (in mm)"
+        data_type: FLOAT(24)
+      - name: wind_speed
+        description: "Wind speed at 10 meters above the ground (in m/s)"
+        data_type: FLOAT(24)
+      -name: relative_humidity_2m
+        description: "relative humidity(in %)"
+        data_type: int
