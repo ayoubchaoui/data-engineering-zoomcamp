@@ -24,7 +24,7 @@ The data used in this project is sourced from the [Open-Meteo API](https://open-
 ## Data Architecture
 
 <div style="text-align: center;">
-  <img src="./setup/images/1_architecture.gif" alt="full data pipeline" />
+  <img src="./setup/images/1_architecture.png" alt="full data pipeline" />
 </div><br/>
 
 Project Map:
@@ -38,10 +38,8 @@ Project Map:
 ## Dashboard
 
 <div style="text-align: center;">
-  <img src="./setup/images/4_dashboard.png" alt="dashboard" />
-  <p>
-    <a href="https://lookerstudio.google.com/reporting/70e4d913-0ff9-4dee-b544-fcd8795a7770">Go to Dashboard</a>
-  </p>
+  <img src="./setup/images/01.PNG" alt="dashboard" />
+  <img src="./setup/images/02.PNG" alt="dashboard" />
 </div>
 
 > *Disclaimer: This is only a pet project. Please, do not use this dashboard for actual financial decisions. T for thanks!*
