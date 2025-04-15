@@ -1,15 +1,15 @@
-# Crytolytics: Coincap Data Extraction and Analysis Pipeline
+# Weather Data Extraction and Analysis Pipeline
 
 ## Introduction
-In today's data-driven world, data plays a pivotal role in shaping decisions within organizations. The sheer volume of data generated necessitates data engineers to centralize data efficiently, clean and model data to align with specific business requirements, and also make the data easily accessible for data consumers.
+In today's data-driven world, timely access to accurate weather data plays a critical role in shaping decisions for businesses, governments, and individuals. The ability to efficiently retrieve, process, and visualize weather data enables various stakeholders to make informed decisions.
 
-The aim of this project is to build an automated data pipeline that retrieves cryptocurrency data from the CoinCap API, processes and transforms it for analysis, and presents key metrics on a near-real-time* dashboard. The dashboard provides users with valuable insights into the dynamic cryptocurrency market.
+The goal of this project is to build an automated data pipeline that retrieves weather data from the Open-Meteo API, processes and transforms it for analysis, and presents key weather metrics (temperature, rain, and wind speed) on a near-real-time dashboard. The dashboard updates every hour to provide users with insights into the latest weather trends.
 
-> **near-real-time because the data is loaded from the source and processed every 5 minutes rather than instantly*
+> **n Note: The term "near-real-time" is used because the data is retrieved and processed at regular intervals (every hour), not instantaneously.
+
 
 ## Dataset
-This data used in this project was obtained from the [CoinCap API](https://docs.coincap.io/#51da64d7-b83b-4fac-824f-3f06b6c8d944), which provides real-time pricing and market activity for over 1,000 cryptocurrencies.
-
+The data used in this project is sourced from the [Open-Meteo API](https://open-meteo.com/en/docs), which provides hourly weather forecasts such as temperature, rainfall, and wind speed for any location around the world. The data is collected and processed every hour to ensure that users receive the most up-to-date weather information availabl
 ## Tools & Technologies used:
 * Cloud: **Google Cloud Platform (GCP)**
 * Infrastructure as Code (Iac): **Terraform**
@@ -63,7 +63,7 @@ Below are steps on how to reproduce this pipeline in the cloud. Note, that, Wind
 The SSH Key will be used to connect and gain access to the gcp virtual machine via the local terminal (Linux). In your terminal run the command <br>
 `ssh-keygen -t rsa -f ~/.ssh/<whatever-you-want-to-name-your-key> -C <the-username-that-you-want-on-your-VM> -b 2048`
 
-ex: `ssh-keygen -t rsa -f ~/.ssh/ssh_key -C aayomide -b 2048`
+ex: `ssh-keygen -t rsa -f ~/.ssh/ssh_key -C ayoub -b 2048`
 
 ### 3. Provision the Needed GCP Resources via Terraform. 
 Follow the [terraform reproduce guide](/setup/terraform_setup.md)
@@ -83,13 +83,13 @@ Create a file called `config` within the .ssh directory in your home folder and 
   
     
     HOST cryptolytics_vm
-        Hostname 35.225.33.44
-        User aayomide
-        IdentityFile c:/Users/aayomide/.ssh/ssh_key
+        Hostname 23.365.23.54
+        User ayoub
+        IdentityFile c:/Users/ayoub/.ssh/ssh_key
         LocalForward 8080 localhost:8080
         LocalForward 8888 localhost:8888
     
-Afterward, connect to the virtual machine via your local terminal by running `ssh cryptolytics_vm`. 
+Afterward, connect to the virtual machine via your local terminal by running `ssh weather_vm`. 
 
 You can also access the VM via VS code as shown [here](https://github.com/AliaHa3/data-engineering-zoomcamp-project/blob/main/setup/gcp_vm.md#connecting-and-setting-up)
 
@@ -105,7 +105,7 @@ Follow the  [airflow how-to-reproduce guide](/setup/airflow_setup.md)
 ### 7. Create a Report in Looker Studio:
 - Log in to [Looker Studio](https://lookerstudio.google.com/navigation/reporting) using your google account
 - Click on "Blank report" and select the "BigQuery" data connector
-- Choose your data source (project -> dataset), which in this case is "prod_coins_dataset"
+- Choose your data source (project -> dataset), which in this case is "prod_meto_dataset"
 
 
 ## Further Improvements
